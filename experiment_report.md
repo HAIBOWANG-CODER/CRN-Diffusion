@@ -217,7 +217,8 @@ $T$ 控制扩散程度，$e^{-T}$ 为信号保留比例：
 训练使用 Adam 优化器，学习率策略为：前 5 个 epoch 线性 warmup（$0 \to 10^{-4}$），之后 cosine annealing 衰减至 $\eta_{min} = 10^{-6}$。
 
   $$\eta(e) = \begin{cases} \eta_{max} \cdot \dfrac{e}{e_{warmup}} & e <        
-  e_{warmup} \[8pt] \eta_{min} + \dfrac{1}{2}(\eta_{max} - \eta_{min})\left(1 +
+  e_{warmup} \[8pt] 
+  \eta_{min} + \dfrac{1}{2}(\eta_{max} - \eta_{min})\left(1 +
   \cos\dfrac{(e - e_{warmup}),\pi}{E - e_{warmup}}\right) & e \geq e_{warmup}   
   \end{cases}$$
 
