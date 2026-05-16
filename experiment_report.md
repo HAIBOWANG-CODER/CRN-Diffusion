@@ -232,7 +232,7 @@ $$
 
 ### 6.3 生成图质量演变
 
-每 5 个 epoch 保存一张 $8 \times 8$ 生成图 grid，以下展示关键节点：
+每 5 个 epoch 保存一张 $8 \times 8$ 生成图 grid，(采样step=50)，以下展示关键节点：
 
 #### Exp-1（Base, v0=10, T=8）
 
@@ -276,6 +276,11 @@ Reverser Tajectory
 | Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
 |---------|---------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/reverse_trajectory-v0-10.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/reverse_trajectory-v0-100-T-8.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/reverse_trajectory-v0-100-T-1.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/reverse_trajectory-v0-100-T-100.png) |
+
+最终模型生成的图像（采样step=200）
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
+|---------|---------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/sample_grid-v0-10.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/sample_grid-v0-100-T-8.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/sample_grid-v0-100-T-5.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/sample_grid.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/sample_grid-v0-100-T-1.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/sample_grid-v0-100-T-100.png) |
 
 
 ### 6.4 训练时间对比
