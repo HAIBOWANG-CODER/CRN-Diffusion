@@ -215,14 +215,6 @@ $T$ 控制扩散程度，$e^{-T}$ 为信号保留比例：
 |---------|---------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-step-loss.png) |
 
-**分析**：
-
-各实验组 loss 均在 200 epoch 内单调下降并趋于平稳，未出现发散或震荡，说明学习率策略（warmup + cosine annealing）对所有参数组合均有效。
-
-- **$v_0$ 的影响**：$v_0$ 从 10 增大到 100，初始 loss 从 16.1 升至 138.1，收敛 loss 从 0.319 升至 7.633，量级增大约 24 倍，与 score 幅度 $\propto v_0$ 的理论预期一致（MSE $\propto v_0^2$ 的理论上界未完全达到，说明模型有效压缩了误差）。
-- **$T$ 的影响**：$T=5$ 相比 $T=8$ 初始 loss 更高（166.7 vs 138.1），因为更短的时间区间使每步 score 梯度更陡；但两者收敛趋势相似，最终质量相当。
-- **Full vs Base**：Full 模型 loss 量级（0.104 → 0.000936）远小于 Base，但两者训练目标不同，数值不可直接比较。Full 模型 loss 曲线更平滑，波动更小，说明精确后验修正带来了更稳定的梯度信号。
-
 
 ### 6.2 学习率曲线
 
@@ -278,14 +270,6 @@ $$
 |---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0200.png) |
 
-**分析**：
-
-各实验组生成质量随 epoch 增加呈现一致的演变规律：早期（epoch 5~25）输出为随机噪声或模糊团块，中期（epoch 50~100）数字轮廓逐渐清晰，后期（epoch 150~200）笔画细节趋于稳定。
-
-- **Exp-1（$v_0=10$）**：200 epoch 后数字可辨识，但类别分布严重偏向数字 1，其他数字（如 0、8）出现频率极低。图像整体偏暗，像素值集中在低区间，反映了低 $v_0$ 下 $\hat{x}_0$ 反解偏向稀疏图像的系统性偏差。
-- **Exp-2（$v_0=100$, $T=8$）**：类别分布明显改善，各数字均有出现。图像清晰度优于 Exp-1，但部分样本仍有轻微噪点，可能与 $T=8$ 下采样步长 $\Delta t=0.04$ 的 tau-leaping 误差有关。
-- **Exp-3（$v_0=100$, $T=5$）**：整体质量与 Exp-2 相近，类别分布均匀，笔画更清晰，噪点略少。是 Base 模型中视觉效果最佳的组合。
-- **Exp-4（Full, $v_0=100$, $T=5$）**：生成质量与 Exp-3 相近，在 MNIST 上未体现出明显视觉优势。reverse trajectory 显示去噪轨迹更平滑，中间帧过渡更自然，说明后验修正对轨迹一致性有正面作用。
 
 
 Reverser Tajectory
@@ -315,10 +299,6 @@ Reverser Tajectory
 | Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
 |---------|---------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-epoch-time.png) |
-
-**分析**：
-
-Base 模型三组（Exp-1/2/3）每 epoch 耗时几乎相同（17.6~18.0 s），说明 $v_0$ 和 $T$ 的变化不影响计算量——前向加噪和 score 预测的计算图结构完全一致，差异仅在数值上。Full 模型（Exp-4）每 epoch 28.1 s，比 Base 慢约 57%，额外开销来自精确后验计算中的 HJ 求解器（每个像素点需要 Newton 迭代求解能量 $E$）。在 MNIST（$28 \times 28 = 784$ 像素）上这一开销已较显著，迁移到 CIFAR（$32 \times 32 \times 3 = 3072$ 像素）时预计会进一步增大，需要考虑向量化或近似加速。
 
 ---
 
