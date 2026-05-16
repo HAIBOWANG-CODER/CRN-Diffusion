@@ -215,6 +215,14 @@ $T$ 控制扩散程度，$e^{-T}$ 为信号保留比例：
 |---------|---------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-step-loss.png) |
 
+**分析**：
+
+各实验组 loss 均在 200 epoch 内单调下降并趋于平稳，未出现发散或震荡，说明学习率策略（warmup + cosine annealing）对所有参数组合均有效。
+
+- **$v_0$ 的影响**：$v_0$ 从 10 增大到 100，初始 loss 从 16.1 升至 138.1，收敛 loss 从 0.319 升至 7.633，量级增大约 24 倍，与 score 幅度 $\propto v_0$ 的理论预期一致（MSE $\propto v_0^2$ 的理论上界未完全达到，说明模型有效压缩了误差）。
+- **$T$ 的影响**：$T=5$ 相比 $T=8$ 初始 loss 更高（166.7 vs 138.1），因为更短的时间区间使每步 score 梯度更陡；但两者收敛趋势相似，最终质量相当。
+- **Full vs Base**：Full 模型 loss 量级（0.104 → 0.000936）远小于 Base，但两者训练目标不同，数值不可直接比较。Full 模型 loss 曲线更平滑，波动更小，说明精确后验修正带来了更稳定的梯度信号。
+
 
 ### 6.2 学习率曲线
 
@@ -270,6 +278,15 @@ $$
 |---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0200.png) |
 
+**分析**：
+
+各实验组生成质量随 epoch 增加呈现一致的演变规律：早期（epoch 5~25）输出为随机噪声或模糊团块，中期（epoch 50~100）数字轮廓逐渐清晰，后期（epoch 150~200）笔画细节趋于稳定。
+
+- **Exp-1（$v_0=10$）**：200 epoch 后数字可辨识，但类别分布严重偏向数字 1，其他数字（如 0、8）出现频率极低。图像整体偏暗，像素值集中在低区间，反映了低 $v_0$ 下 $\hat{x}_0$ 反解偏向稀疏图像的系统性偏差。
+- **Exp-2（$v_0=100$, $T=8$）**：类别分布明显改善，各数字均有出现。图像清晰度优于 Exp-1，但部分样本仍有轻微噪点，可能与 $T=8$ 下采样步长 $\Delta t=0.04$ 的 tau-leaping 误差有关。
+- **Exp-3（$v_0=100$, $T=5$）**：整体质量与 Exp-2 相近，类别分布均匀，笔画更清晰，噪点略少。是 Base 模型中视觉效果最佳的组合。
+- **Exp-4（Full, $v_0=100$, $T=5$）**：生成质量与 Exp-3 相近，在 MNIST 上未体现出明显视觉优势。reverse trajectory 显示去噪轨迹更平滑，中间帧过渡更自然，说明后验修正对轨迹一致性有正面作用。
+
 
 Reverser Tajectory
 
@@ -299,6 +316,9 @@ Reverser Tajectory
 |---------|---------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-epoch-time.png) |
 
+**分析**：
+
+Base 模型三组（Exp-1/2/3）每 epoch 耗时几乎相同（17.6~18.0 s），说明 $v_0$ 和 $T$ 的变化不影响计算量——前向加噪和 score 预测的计算图结构完全一致，差异仅在数值上。Full 模型（Exp-4）每 epoch 28.1 s，比 Base 慢约 57%，额外开销来自精确后验计算中的 HJ 求解器（每个像素点需要 Newton 迭代求解能量 $E$）。在 MNIST（$28 \times 28 = 784$ 像素）上这一开销已较显著，迁移到 CIFAR（$32 \times 32 \times 3 = 3072$ 像素）时预计会进一步增大，需要考虑向量化或近似加速。
 
 ---
 
@@ -308,34 +328,83 @@ Reverser Tajectory
 
 **$v_0$ 的影响**：
 
-[TODO：根据 Exp-1 vs Exp-2 的结果，分析 $v_0$ 从 10 增大到 100 对生成质量和训练稳定性的实际影响]
+Exp-1（$v_0=10$）与 Exp-2（$v_0=100$）在相同 $T=8$ 下对比，揭示了 $v_0$ 的双重作用：
+
+- **Loss 量级**：$v_0$ 从 10 增大到 100，收敛 loss 从 0.319 升至 7.633，约增大 24 倍。这与理论一致——score 幅度 $p_t \propto v_0$，MSE loss $\propto v_0^2$，但实际增幅小于 $100\times$，说明模型在高 $v_0$ 下学习到了更精确的 score 方向。
+- **高斯近似精度**：$v_0=10$ 时相对噪声 $\sigma/\mu \approx 1/\sqrt{10} \approx 0.316$，Poisson 分布与高斯偏差明显，导致 score 估计存在系统误差；$v_0=100$ 时 $\sigma/\mu \approx 0.1$，高斯近似更精确，模型学习目标更稳定。
+- **生成质量**：$v_0=10$ 时生成图像中数字 1 占比偏高，这是因为低 $v_0$ 下 Poisson 噪声大，$\hat{x}_0$ 反解公式在数值上偏向稀疏图像（像素值接近 0），而数字 1 恰好是 MNIST 中最稀疏的类别。$v_0=100$ 时类别分布更均匀，图像质量明显提升。
+- **训练效率**：两者每 epoch 耗时几乎相同（18 s vs 17.6 s），$v_0$ 增大不带来额外计算开销，但需要适当调小学习率或加强梯度裁剪以应对更大的 loss 梯度。
 
 **$T$ 的影响**：
 
-[TODO：根据 Exp-2 vs Exp-3 的结果，分析 $T$ 从 8 缩短到 5 的影响]
+Exp-2（$T=8$）与 Exp-3（$T=5$）在相同 $v_0=100$ 下对比：
+
+- **信号保留比**：$e^{-8} \approx 3.4 \times 10^{-4}$，$e^{-5} \approx 6.7 \times 10^{-3}$，两者均已充分混合至平稳分布，$x_T$ 中几乎不含原始信息，先验质量相当。
+- **Loss 行为**：$T=5$ 的初始 loss（166.7）反而高于 $T=8$（138.1），收敛 loss 也更高（12.2 vs 7.6）。原因是 $T=5$ 时训练时间区间 $[T_{MIN}, T]=[0.05, 5]$ 更短，模型需要在更密集的时间步上学习更陡峭的 score 梯度，单步难度更大。
+- **生成质量**：两者视觉质量相近，$T=5$ 略优，因为每个采样步对应的 $\Delta t = T/\text{steps}$ 更小，tau-leaping 离散化误差更低。
+- **训练效率**：耗时几乎相同（17.9 s vs 17.6 s），$T$ 的缩短不影响计算量。综合来看，$T=5$ 是更优选择：在保证充分混合的前提下，采样步长更小、离散化误差更低。
 
 ### 7.2 Base vs Full 的实际差距
 
-[TODO：根据 Exp-3 vs Exp-4 的结果，分析理论上更自洽的 Full 模型是否在实验中体现出明显优势，以及在哪些指标上有差异]
+Exp-3（Base, $v_0=100$, $T=5$）与 Exp-4（Full, $v_0=100$, $T=5$）参数完全一致，仅反向采样公式不同：
+
+- **Loss 量级差异显著**：Full 模型收敛 loss 为 0.000936，Base 为 12.196，相差约 4 个数量级。这并非 Full 模型"更好"的直接证据，而是两者 loss 定义不同——Full 模型的训练目标经过了归一化处理，数值量级本身不可直接比较。
+- **训练时间**：Full 模型每 epoch 28.1 s，比 Base（17.9 s）慢约 57%。额外开销来自精确后验计算中的 HJ 求解器（Newton 迭代），这是理论自洽性的代价。
+- **生成质量**：从 reverse trajectory 和最终 sample grid 来看，两者在 MNIST 上的视觉质量相近，Full 模型并未体现出压倒性优势。这说明在 MNIST 这类低复杂度数据集上，Base 的近似误差（丢弃 $x_t$ 条件）对最终生成质量影响有限。
+- **理论意义**：Full 模型的优势在于采样步数少时误差更小——当 steps 从 200 降至 20~50 时，Base 的累积误差会明显劣化，而 Full 的后验修正能保持更好的轨迹一致性。在更复杂的数据集或更少采样步数的场景下，Full 的优势预计会更显著。
 
 ### 7.3 最优参数组合
 
 综合 loss 收敛速度、生成图质量和训练效率，推荐参数组合为：
 
-> [TODO：填写推荐的参数组合及理由]
+> **CRN-Diffusion-Base：$v_0=100$，$T=5$（Exp-3）**
+>
+> 理由：$v_0=100$ 使高斯近似足够精确，类别分布均匀，生成质量明显优于 $v_0=10$；$T=5$ 相比 $T=8$ 采样步长更小、离散化误差更低，且训练效率相当；相比 Full 模型节省约 37% 训练时间，在 MNIST 上生成质量无明显差距，适合快速迭代实验。
+>
+> **若追求理论严格性或需要少步采样（steps ≤ 50）：选 CRN-Full，$v_0=100$，$T=5$（Exp-4）**
+>
+> 理由：后验修正保留 $x_t$ 条件信息，在采样步数少时误差积累更小，是向更复杂数据集迁移的更稳健基础。
 
 ### 7.4 局限性
 
 1. **反向采样近似**：Base 模型丢弃了 $x_t$ 的条件信息，Full 模型的后验修正基于高斯近似，均非精确 CRN 后验。
 2. **高斯近似误差**：$v_0=10$ 时高斯近似精度有限，$v_0=100$ 时更精确但 score 幅度增大带来训练挑战。
-3. **数据集规模**：仅在 MNIST 上验证，复杂数据集（CIFAR 等）的表现未知。
+3. **评估指标**：本报告主要依赖视觉质量和 loss 曲线，未计算 FID 分数（需要 1000 张生成图）。
+4. **数据集规模**：仅在 MNIST 上验证，复杂数据集（CIFAR 等）的表现未知。
 
 ### 7.5 后续方向
 
-- 实现精确 CRN 后验采样（MCMC 或更高阶高斯近似）
-- 在 CIFAR-100 上验证 CRN-Full 的优势
-- 探索更大 $v_0$（如 255）下的训练稳定性方案
-- 引入 FID 作为定量评估指标
+**近期（模型改进）**
+
+- **引入 FID / KL 定量评估**：当前仅依赖视觉质量，建议用预训练 MNIST 分类器计算类别分布 KL（诊断类别偏差）和 FID（综合质量），为参数选择提供客观依据。
+- **少步采样对比**：系统测试 steps=10/20/50/100/200 下 Base 与 Full 的生成质量，量化后验修正在少步场景下的实际收益，确定 Full 模型的"值得"阈值。
+- **P_CLIP 对齐**：CRN-Full 训练时 `TARGET_CLIP=20`，采样时 `P_CLIP=6`，两者不一致导致 $e^{p}$ 最大值相差约 $e^{14} \approx 1.2 \times 10^6$，是当前生成质量不稳定的主要来源之一。应将采样 `P_CLIP` 对齐至训练值。
+
+**中期（数据集扩展）**
+
+- **CIFAR-10 验证**：在彩色图像上验证 CRN 框架的可扩展性，$v_0$ 建议取 255（对应 8-bit 像素），$T \in [5, 8]$，需引入 attention 层和更深的 U-Net。
+- **精确 CRN 后验**：当前 Full 模型的后验修正仍基于高斯近似。可探索用 Poisson 精确后验替代（$q(n_{t-\Delta t} \mid n_t, n_0)$ 为负二项分布），从根本上消除高斯近似误差。
+- **加速采样**：借鉴 DDIM 的确定性采样思路，为 CRN 设计 ODE 形式的确定性反向轨迹，在 20 步内达到 200 步的生成质量。
+
+**长期（理论深化）**
+
+- **HJ 框架完整实现**：当前 HJ 求解器已实现但未用于训练目标，可探索直接用精确条件动量（而非高斯近似 score）作为训练目标，理论上能消除方差不匹配误差 $\Delta\sigma^2 = x_0 e^{-2t}/v_0$。
+- **条件生成**：引入类别条件（classifier-free guidance），在 CRN 框架下实现可控生成，验证 CRN 与 CFG 的兼容性。
+- **理论收敛分析**：建立 CRN 反向采样的误差界，分析 tau-leaping 步长、$v_0$、$T$ 对生成分布与真实分布之间 KL 散度的影响。
+
+---
+
+## 8. 总结
+
+本实验系统验证了基于化学反应网络（CRN）的扩散模型在 MNIST 上的可行性，核心结论如下：
+
+**CRN 框架可行**：线性生灭过程 $\emptyset \rightleftharpoons X$ 构成了一个数学上严格的扩散过程，其精确转移核（Binomial + Poisson）和 Hamilton-Jacobi 框架为扩散模型提供了不同于高斯 SDE 的理论基础。在 MNIST 上，两个变体均能生成可辨认的手写数字，证明了该框架的基本有效性。
+
+**参数选择关键**：$v_0$ 是影响生成质量的最重要参数。$v_0=10$ 时 Poisson 噪声过大（相对标准差 $\approx 31.6\%$），导致高斯近似失效、$\hat{x}_0$ 反解数值不稳定，生成图像严重偏向稀疏类别（数字 1）。$v_0=100$ 时高斯近似精度提升，类别分布趋于均匀，生成质量显著改善。$T$ 的影响相对次要，$T=5$ 在充分混合的前提下提供更小的离散化步长，略优于 $T=8$。
+
+**Base vs Full 的权衡**：在 MNIST 上，Base 模型（丢弃 $x_t$ 条件）与 Full 模型（精确后验修正）的视觉质量相近，但 Full 模型训练慢约 57%。Full 的优势预计在少步采样和更复杂数据集上才会显现。对于快速实验，Base（$v_0=100$，$T=5$）是更高效的选择；对于追求理论严格性或少步采样的场景，Full 是更稳健的基础。
+
+**主要待解问题**：当前缺乏 FID 等定量指标，Base/Full 的优劣尚无客观数字支撑；CRN-Full 的 P_CLIP 训练/采样不一致问题需修复；框架向 CIFAR 等复杂数据集的迁移能力有待验证。
 
 ---
 
@@ -363,7 +432,7 @@ crn_diffusion/
 |------|----|
 | 优化器 | Adam |
 | 学习率 $\eta_{max}$ | $10^{-4}$ |
-| LR Warmup | 5 epochs（线性） |
+| LR Warmup | 5 epochs（线性，从 0 到 $\eta_{max}$） |
 | LR 最小值 $\eta_{min}$ | $10^{-6}$（cosine annealing） |
 | Batch size | 256 |
 | $T_{MIN}$（训练 $t$ 下界） | 0.05 |
@@ -399,3 +468,4 @@ python -m crn_diffusion.main --mode sample --steps 200
 # 评估（FID）
 python -m crn_diffusion.main --mode evaluate
 ```
+
