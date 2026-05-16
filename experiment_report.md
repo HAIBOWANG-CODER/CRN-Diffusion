@@ -175,7 +175,7 @@ $v_0$ 越大，高斯近似越精确，但 loss 数值越大，训练需要更�
 
 ### 5.3 $T$ 的影响
 
-$T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
+$T$ 控制扩散程度，$e^{-T}$ 为信号保留比例：
 
 | $T$ | $e^{-T}$ | 信号保留 | 平稳程度 |
 |-----|----------|---------|---------|
@@ -211,9 +211,6 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 |---------|---------|----------|----------|
 | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) |
 
-**分析**：
-
-[TODO：填写 loss 曲线的观察，例如：v0=100 时 loss 数值更大但收敛趋势相似；Full 模型是否比 Base 收敛更快/更稳定等]
 
 ### 6.2 学习率曲线
 
@@ -221,8 +218,7 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 
 $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\ \eta_{min} + \frac{1}{2}(\eta_{max} - \eta_{min})\left(1 + \cos\frac{(e - e_{warmup})\pi}{E - e_{warmup}}\right) & e > e_{warmup} \end{cases}$$
 
-> 插入 wandb lr 曲线截图：
-> ![学习率曲线](../generated/lr_curve.png)
+> ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-lr.png)
 
 ### 6.3 生成图质量演变
 
@@ -252,9 +248,6 @@ $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\
 |---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch200.png) |
 
-**分析**：
-
-[TODO：描述各组生成图的清晰度、数字可辨识性、噪声水平的演变趋势]
 
 ### 6.4 训练时间对比
 
@@ -270,9 +263,6 @@ $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\
 |---------|---------|----------|----------|
 | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) |
 
-**分析**：
-
-[TODO：Full 模型因后验计算更复杂，每 epoch 时间是否明显增加？$v_0$ 和 $T$ 对训练时间的影响？]
 
 ---
 
