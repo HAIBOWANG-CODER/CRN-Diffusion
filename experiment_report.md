@@ -201,25 +201,15 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 | Exp-3（Base, v0=100, T=5） | 166.66043 | 12.19615 | 200 |
 | Exp-4（Full, v0=100, T=5） | 0.1038 | 0.00093576 | 200 |
 
-Exp-1:
-> ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png)
-Exp-2:
->![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png)
-Exp-3:
->![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png)
-Exp-4:
-> ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png)
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 |
+|---------|---------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png) |
 
 #### Step Loss 曲线
 
-Exp-1:
-> ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png)
-Exp-2:
->![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png)
-Exp-3:
->![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png)
-Exp-4:
-> ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png)
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 |
+|---------|---------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) |
 
 **分析**：
 
