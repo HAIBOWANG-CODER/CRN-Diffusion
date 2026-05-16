@@ -159,6 +159,7 @@ $$x_{t-\Delta t} \;\sim\; \mathcal{N}(\tilde{\mu},\; \tilde{\sigma}^2)$$
 | Exp-2 | Base | 100 | 8.0 | 高 $v_0$，score 幅度增大 |
 | Exp-3 | Base | 100 | 5.0 | 高 $v_0$，缩短扩散时间 |
 | Exp-4 | Full | 100 | 5.0 | Full 模型，与 Exp-3 对比 |
+| Exp-5 | Base | 100 | 1.0 | 与 Exp-3 对比 |
 
 ### 5.2 $v_0$ 的影响
 
