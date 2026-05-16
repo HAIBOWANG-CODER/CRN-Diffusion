@@ -8,9 +8,11 @@ Usage:
     python main.py --mode all       # 训练 → 采样 → 评估
 """
 import argparse
+import math
 import torch
 
 from . import config
+from .config import apply_dataset
 from .data import save_real_mnist_samples
 
 
@@ -40,7 +42,7 @@ def setup_wandb():
 
 def run_train(wandb_run=None):
     from .train import train_epoch
-    from .model import UNet, EMA
+    from .model import UNet, UNetCIFAR, EMA
     from .forward import CRNForwardProcess
     from torch.cuda.amp import GradScaler
     import torch.optim as optim
@@ -48,11 +50,24 @@ def run_train(wandb_run=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[Train] Device: {device}")
 
-    model = UNet().to(device)
-    print(f"[Train] 模型参数量: {sum(p.numel() for p in model.parameters()):,}")
+    ModelClass = UNetCIFAR if config.Config.DATASET == "cifar100" else UNet
+    model = ModelClass().to(device)
+    print(f"[Train] 模型: {ModelClass.__name__}, 参数量: {sum(p.numel() for p in model.parameters()):,}")
 
     ema = EMA(model, decay=config.Config.EMA_DECAY)
     optimizer = optim.Adam(model.parameters(), lr=config.Config.LR)
+
+    # Cosine annealing with linear warmup
+    def lr_lambda(epoch):
+        warmup = config.Config.LR_WARMUP_EPOCHS
+        total = config.Config.EPOCHS
+        if epoch < warmup:
+            return epoch / max(warmup, 1)
+        progress = (epoch - warmup) / max(total - warmup, 1)
+        min_ratio = config.Config.LR_MIN / config.Config.LR
+        return min_ratio + 0.5 * (1.0 - min_ratio) * (1 + math.cos(math.pi * progress))
+
+    scheduler = optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
     scaler = GradScaler()
     crn = CRNForwardProcess(device=device)
 
@@ -60,6 +75,11 @@ def run_train(wandb_run=None):
 
     for epoch in range(1, config.Config.EPOCHS + 1):
         loss = train_epoch(model, ema, optimizer, scaler, crn, device, epoch, wandb_run)
+        scheduler.step()
+
+        if wandb_run:
+            import wandb
+            wandb_run.log({"train/lr": scheduler.get_last_lr()[0], "epoch": epoch})
 
         if epoch % config.Config.SAMPLE_EVERY == 0:
             ema.apply_shadow()
@@ -84,6 +104,7 @@ def run_train(wandb_run=None):
 
 def run_sample(ckpt_path=None, n=64, steps=200):
     from .sample import generate_samples
+    from .model import UNet, UNetCIFAR
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[Sample] Device: {device}")
 
@@ -97,7 +118,8 @@ def run_sample(ckpt_path=None, n=64, steps=200):
             print("[Sample] ERROR: No checkpoint found.")
             return
 
-    generate_samples(ckpt_path, n=n, steps=steps)
+    ModelClass = UNetCIFAR if config.Config.DATASET == "cifar100" else UNet
+    generate_samples(ckpt_path, n=n, steps=steps, model_class=ModelClass)
 
 
 def run_evaluate(ckpt_path, n_samples=1000, wandb_run=None):
@@ -131,10 +153,16 @@ def main():
                         help="展示样本数量（默认 64）")
     parser.add_argument("--steps", type=int, default=200,
                         help="采样步数（默认 200）")
+    parser.add_argument("--dataset", type=str, default=None,
+                        choices=list(config.DATASET_CONFIGS.keys()),
+                        help="数据集（默认使用 config.DEFAULT_DATASET）")
     parser.add_argument("--wandb_mode", type=str, default=None,
                         choices=["online", "offline", "disabled"],
                         help="覆盖 wandb 模式")
     args = parser.parse_args()
+
+    if args.dataset:
+        apply_dataset(args.dataset)
 
     if args.wandb_mode:
         config.Config.WANDB_MODE = args.wandb_mode
@@ -145,6 +173,7 @@ def main():
     print("CRN-based Diffusion Model")
     print(f"Mode: {args.mode}")
     print(f"Device: cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Dataset: {config.Config.DATASET} ({config.Config.IMG_SIZE}x{config.Config.IMG_SIZE}x{config.Config.IMG_CHANNELS})")
     print(f"V0={config.Config.V0}, T={config.Config.T}, DT={config.Config.DT}")
     print(f"BATCH_SIZE={config.Config.BATCH_SIZE}, EPOCHS={config.Config.EPOCHS}")
     print("=" * 60)

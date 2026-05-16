@@ -45,10 +45,12 @@ def reverse_sample(model, xT, device, crn, steps=200):
     return x
 
 
-def generate_samples(ckpt_path, n=64, steps=200, output_dir=None):
+def generate_samples(ckpt_path, n=64, steps=200, output_dir=None, model_class=None):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = UNet().to(device)
+    if model_class is None:
+        model_class = UNet
+    model = model_class().to(device)
     ema = EMA(model, decay=config.Config.EMA_DECAY)
 
     ckpt = torch.load(ckpt_path, map_location=device)
@@ -60,7 +62,7 @@ def generate_samples(ckpt_path, n=64, steps=200, output_dir=None):
 
     crn = CRNForwardProcess(device=device)
 
-    xT = torch.poisson(config.Config.V0 * torch.ones(n, 1, config.Config.IMG_SIZE,
+    xT = torch.poisson(config.Config.V0 * torch.ones(n, config.Config.IMG_CHANNELS, config.Config.IMG_SIZE,
                                                         config.Config.IMG_SIZE, device=device))
     xT = xT.float() / config.Config.V0
 
@@ -88,7 +90,12 @@ if __name__ == "__main__":
     parser.add_argument("--n", type=int, default=64, help="Number of samples")
     parser.add_argument("--steps", type=int, default=200, help="Sampling steps")
     parser.add_argument("--output", type=str, default=None, help="Output directory")
+    parser.add_argument("--dataset", type=str, default=None, help="Dataset name (mnist/cifar100)")
     args = parser.parse_args()
+
+    if args.dataset:
+        from .config import apply_dataset
+        apply_dataset(args.dataset)
 
     if args.ckpt is None:
         import glob
@@ -100,4 +107,6 @@ if __name__ == "__main__":
             print("ERROR: No checkpoint found. Please train first or specify --ckpt.")
             exit(1)
 
-    generate_samples(args.ckpt, args.n, args.steps, args.output)
+    from .model import UNetCIFAR
+    model_class = UNetCIFAR if config.Config.DATASET == "cifar100" else UNet
+    generate_samples(args.ckpt, args.n, args.steps, args.output, model_class=model_class)

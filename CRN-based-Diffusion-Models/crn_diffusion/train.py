@@ -2,17 +2,13 @@
 训练循环：CRN Diffusion Model。
 
 训练流程：
-    1. x0 ~ MNIST
+    1. x0 ~ 数据集（MNIST 或 CIFAR-100 灰度）
     2. t ~ Uniform(0, T)
-    3. x_t = ForwardCRN(x0, t)  (tau-leaping)
-    4. p_target = HJSolver.conditional_momentum(x0, x_t, t)
+    3. x_t = ForwardCRN(x0, t)
+    4. p_target = conditional_momentum(x0, x_t, t)
     5. p_pred   = U-Net(x_t, t)
     6. Loss = MSE(p_pred, p_target)
     7. Backprop + Adam + EMA
-
-日志（wandb）：
-    - loss 曲线（逐 step）
-    - 每 N epoch 可视化生图
 """
 import os
 import math
@@ -26,7 +22,7 @@ from . import config
 from .data import get_dataloader
 from .forward import CRNForwardProcess
 from .hj_solver import conditional_momentum
-from .model import UNet, EMA
+from .model import UNet, UNetCIFAR, EMA
 
 
 def train_epoch(model, ema, optimizer, scaler, crn, device, epoch, wandb_run=None):
@@ -41,13 +37,12 @@ def train_epoch(model, ema, optimizer, scaler, crn, device, epoch, wandb_run=Non
         x0 = x0.to(device)
 
         B = x0.size(0)
-        # t 下界设为 0.01 避免 t≈0 时 Newton 法数值不稳定
-        t = torch.rand(B, device=device) * (config.Config.T - 0.01) + 0.01
+        t_min = config.Config.T_MIN
+        t = torch.rand(B, device=device) * (config.Config.T - t_min) + t_min
 
         with torch.no_grad():
             x_t = crn(x0, t)
             pt_target = conditional_momentum(x0, x_t, t)
-            # 跳过含 NaN/Inf 的 batch，避免污染模型权重
             if not torch.isfinite(pt_target).all():
                 continue
 
@@ -96,7 +91,8 @@ def sample_images(model, ema_shadow_model, crn, device, n=64, epoch=0, loss=None
     model.eval()
     with torch.no_grad():
         xT = torch.poisson(config.Config.V0 * torch.ones(
-            n, 1, config.Config.IMG_SIZE, config.Config.IMG_SIZE, device=device
+            n, config.Config.IMG_CHANNELS, config.Config.IMG_SIZE, config.Config.IMG_SIZE,
+            device=device
         )).float() / config.Config.V0
 
     x = reverse_sample(model, xT, device, crn, steps=config.Config.SAMPLE_STEPS_QUICK)
@@ -106,7 +102,6 @@ def sample_images(model, ema_shadow_model, crn, device, n=64, epoch=0, loss=None
     import numpy as np
 
     grid = make_grid(x, nrow=int(n ** 0.5), padding=2, normalize=True)
-    # Convert to PIL for annotation
     grid_np = (grid.permute(1, 2, 0).cpu().numpy() * 255).clip(0, 255).astype("uint8")
     if grid_np.shape[2] == 1:
         pil_img = Image.fromarray(grid_np[:, :, 0], mode="L").convert("RGB")
@@ -126,16 +121,7 @@ def sample_images(model, ema_shadow_model, crn, device, n=64, epoch=0, loss=None
 
 def reverse_sample(model, xT, device, crn, steps=200):
     """
-    从 Poisson 先验 xT 反向采样到 x0。
-
-    DDPM 风格的 x0-预测反向采样：
-    给定模型输出 p = score = -(xt - μ) / σ²，其中
-        μ = x0*e^{-t} + (1-e^{-t}), σ² = (1-e^{-t})*(x0*e^{-t}+1)/v0
-
-    从 p 和 xt 线性求解 x0:
-        x0 = [p*(1-et)/v0 + xt - 1 + et] / (et * [1 - p*(1-et)/v0])
-
-    然后从 P(x_{t-dt} | x0) 精确采样下一步。
+    从 Poisson 先验 xT 反向采样到 x0。DDPM 风格 x0-预测。
     """
     model.eval()
     dt_step = config.Config.T / steps
@@ -153,8 +139,6 @@ def reverse_sample(model, xT, device, crn, steps=200):
 
         with torch.no_grad():
             et = torch.exp(-s)
-            # Solve for x0 from the linear equation derived from the score:
-            # x0 = [p*(1-et)/v0 + xt - 1 + et] / (et * [1 - p*(1-et)/v0])
             a = p * (1.0 - et) / v0
             numerator = a + x - 1.0 + et
             denominator = et * (1.0 - a)
@@ -180,6 +164,7 @@ def main():
         entity=config.Config.WANDB_ENTITY,
         mode=config.Config.WANDB_MODE,
         config={
+            "dataset": config.Config.DATASET,
             "V0": config.Config.V0,
             "T":  config.Config.T,
             "DT": config.Config.DT,
@@ -188,15 +173,18 @@ def main():
             "EMA_DECAY": config.Config.EMA_DECAY,
             "EPOCHS": config.Config.EPOCHS,
             "IMG_SIZE": config.Config.IMG_SIZE,
+            "IMG_CHANNELS": config.Config.IMG_CHANNELS,
         },
     )
     wandb_run = wandb.run
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Device: {device}")
+    print(f"Dataset: {config.Config.DATASET} ({config.Config.IMG_SIZE}x{config.Config.IMG_SIZE}x{config.Config.IMG_CHANNELS})")
 
-    model = UNet().to(device)
-    print(f"模型参数量: {sum(p.numel() for p in model.parameters()):,}")
+    ModelClass = UNetCIFAR if config.Config.DATASET == "cifar100" else UNet
+    model = ModelClass().to(device)
+    print(f"模型: {ModelClass.__name__}, 参数量: {sum(p.numel() for p in model.parameters()):,}")
 
     ema = EMA(model, decay=config.Config.EMA_DECAY)
     optimizer = optim.Adam(model.parameters(), lr=config.Config.LR)
@@ -218,6 +206,7 @@ def main():
             checkpoint_path = config.CHECKPOINT_DIR / f"ckpt_epoch{epoch:04d}.pt"
             torch.save({
                 "epoch": epoch,
+                "dataset": config.Config.DATASET,
                 "model_state": model.state_dict(),
                 "ema_shadow": ema.shadow,
                 "optimizer_state": optimizer.state_dict(),
