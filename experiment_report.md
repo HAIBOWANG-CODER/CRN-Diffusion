@@ -260,10 +260,15 @@ $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\
 
 | 实验组 | 设备 | 每 Epoch 平均时间 | 总训练时间（200 epoch） |
 |--------|------|-----------------|----------------------|
-| Exp-1（Base, v0=10, T=8） | [TODO] | [TODO] s | [TODO] min |
-| Exp-2（Base, v0=100, T=8） | [TODO] | [TODO] s | [TODO] min |
-| Exp-3（Base, v0=100, T=5） | [TODO] | [TODO] s | [TODO] min |
-| Exp-4（Full, v0=100, T=5） | [TODO] | [TODO] s | [TODO] min |
+| Exp-1（Base, v0=10, T=8） | [TODO] | 18 s | 60.5 min |
+| Exp-2（Base, v0=100, T=8） | [TODO] | 17.6 s | 59.8 min |
+| Exp-3（Base, v0=100, T=5） | [TODO] | 17.9 s | 60.3 min |
+| Exp-4（Full, v0=100, T=5） | [TODO] | 28.1 s | 94.3 min |
+
+
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 |
+|---------|---------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) |
 
 **分析**：
 
