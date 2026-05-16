@@ -236,19 +236,19 @@ $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\
 
 | Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
 |---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
-| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/epoch0200.png) |
 
 #### Exp-3（Base, v0=100, T=5）
 
 | Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
 |---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
-| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/epoch0200.png) |
 
 #### Exp-4（Full, v0=100, T=5）
 
-| Epoch 5 | Epoch 50 | Epoch 100 | Epoch 200 |
-|---------|---------|----------|----------|
-| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
+| Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
+|---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/samples_epoch0200.png) |
 
 **分析**：
 
