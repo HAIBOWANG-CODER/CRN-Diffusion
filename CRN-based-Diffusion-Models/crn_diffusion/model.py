@@ -152,7 +152,6 @@ class UNet(nn.Module):
 
         self.middle = nn.ModuleList([
             ResBlock(chs[3], chs[3], time_emb_dim, dropout),
-            AttentionBlock(chs[3]),
             ResBlock(chs[3], chs[3], time_emb_dim, dropout),
         ])
 
@@ -180,14 +179,19 @@ class UNet(nn.Module):
         self.output_conv = nn.Sequential(
             nn.GroupNorm(8, chs[0]),
             nn.SiLU(),
-            nn.Conv2d(chs[0], img_ch, 3, padding=1),
+            nn.Conv2d(chs[0], img_ch, 3, padding=1),  # img_ch=1 for MNIST, 3 for CIFAR-100
         )
 
     def forward(self, x, t):
-        # 28×28 doesn't divide evenly by 2 three times (28→14→7→3).
-        # Pad to 32×32 so the spatial chain is 32→16→8→4, then crop back.
+        # Pad spatial dims to the nearest multiple of 8 so three halvings stay integer.
+        # 28×28 → 32×32 (pad 2 each side); 32×32 → 32×32 (no pad needed).
         H_orig, W_orig = x.shape[-2], x.shape[-1]
-        x = F.pad(x, (2, 2, 2, 2))  # (B, C, 28, 28) → (B, C, 32, 32)
+        pad_h = (8 - H_orig % 8) % 8
+        pad_w = (8 - W_orig % 8) % 8
+        # distribute padding: more on right/bottom
+        ph_top, ph_bot = pad_h // 2, pad_h - pad_h // 2
+        pw_left, pw_right = pad_w // 2, pad_w - pad_w // 2
+        x = F.pad(x, (pw_left, pw_right, ph_top, ph_bot))
 
         t_emb = self.time_embed(t)
         t_emb = self.time_mlp(t_emb)
@@ -236,7 +240,152 @@ class UNet(nn.Module):
         x = self.output_conv(x)      # (B, 1, 32, 32)
 
         # Crop back to original spatial size
-        x = x[:, :, 2:2 + H_orig, 2:2 + W_orig]  # (B, 1, 28, 28)
+        x = x[:, :, ph_top:ph_top + H_orig, pw_left:pw_left + W_orig]
+        return x
+
+
+class UNetCIFAR(nn.Module):
+    """
+    增强版 U-Net，专为 CIFAR-100 (32×32×3) 设计。
+    相比 UNet：在 8×8 和 16×16 分辨率额外加 AttentionBlock，
+    以捕捉 CIFAR-100 复杂纹理的中频结构。
+    MNIST 训练继续使用原 UNet，互不影响。
+    """
+
+    def __init__(self, cfg=None):
+        super().__init__()
+        cfg = cfg or config.Config
+        chs = cfg.CHANNELS          # [64, 128, 256, 512]
+        time_emb_dim = cfg.TIME_EMB_DIM
+        img_ch = cfg.IMG_CHANNELS   # 3 for CIFAR-100
+        dropout = cfg.DROPOUT
+
+        self.time_embed = SinusoidalTimeEmbedding(time_emb_dim)
+        self.time_mlp = nn.Sequential(
+            nn.Linear(time_emb_dim, time_emb_dim * 4),
+            nn.SiLU(),
+            nn.Linear(time_emb_dim * 4, time_emb_dim),
+        )
+
+        self.input_conv = nn.Conv2d(img_ch, chs[0], 3, padding=1)
+
+        # Encoder
+        self.down1 = nn.ModuleList([
+            ResBlock(chs[0], chs[0], time_emb_dim, dropout),
+            ResBlock(chs[0], chs[0], time_emb_dim, dropout),
+        ])
+        self.down2 = nn.ModuleList([
+            ResBlock(chs[0], chs[1], time_emb_dim, dropout),
+            ResBlock(chs[1], chs[1], time_emb_dim, dropout),
+        ])
+        self.attn2 = AttentionBlock(chs[1])   # attention at 16×16
+
+        self.down3 = nn.ModuleList([
+            ResBlock(chs[1], chs[2], time_emb_dim, dropout),
+            ResBlock(chs[2], chs[2], time_emb_dim, dropout),
+        ])
+        self.attn3 = AttentionBlock(chs[2])   # attention at 8×8
+
+        self.down4 = nn.ModuleList([
+            ResBlock(chs[2], chs[3], time_emb_dim, dropout),
+            ResBlock(chs[3], chs[3], time_emb_dim, dropout),
+        ])
+
+        self.downsample1 = Downsample(chs[0])
+        self.downsample2 = Downsample(chs[1])
+        self.downsample3 = Downsample(chs[2])
+
+        self.middle = nn.ModuleList([
+            ResBlock(chs[3], chs[3], time_emb_dim, dropout),
+            AttentionBlock(chs[3]),             # attention at 4×4
+            ResBlock(chs[3], chs[3], time_emb_dim, dropout),
+        ])
+
+        # Decoder
+        self.upsample3 = Upsample(chs[3])
+        self.up3 = nn.ModuleList([
+            ResBlock(chs[3] + chs[2], chs[2], time_emb_dim, dropout),
+            ResBlock(chs[2], chs[2], time_emb_dim, dropout),
+        ])
+        self.up_attn3 = AttentionBlock(chs[2])  # attention at 8×8
+
+        self.upsample2 = Upsample(chs[2])
+        self.up2 = nn.ModuleList([
+            ResBlock(chs[2] + chs[1], chs[1], time_emb_dim, dropout),
+            ResBlock(chs[1], chs[1], time_emb_dim, dropout),
+        ])
+        self.up_attn2 = AttentionBlock(chs[1])  # attention at 16×16
+
+        self.upsample1 = Upsample(chs[1])
+        self.up1 = nn.ModuleList([
+            ResBlock(chs[1] + chs[0], chs[0], time_emb_dim, dropout),
+            ResBlock(chs[0], chs[0], time_emb_dim, dropout),
+        ])
+
+        self.output_conv = nn.Sequential(
+            nn.GroupNorm(8, chs[0]),
+            nn.SiLU(),
+            nn.Conv2d(chs[0], img_ch, 3, padding=1),
+        )
+
+    def forward(self, x, t):
+        H_orig, W_orig = x.shape[-2], x.shape[-1]
+        pad_h = (8 - H_orig % 8) % 8
+        pad_w = (8 - W_orig % 8) % 8
+        ph_top, ph_bot = pad_h // 2, pad_h - pad_h // 2
+        pw_left, pw_right = pad_w // 2, pad_w - pad_w // 2
+        x = F.pad(x, (pw_left, pw_right, ph_top, ph_bot))
+
+        t_emb = self.time_embed(t)
+        t_emb = self.time_mlp(t_emb)
+
+        x = self.input_conv(x)
+
+        for blk in self.down1:
+            x = blk(x, t_emb)
+        x1_skip = x
+        x = self.downsample1(x)
+
+        for blk in self.down2:
+            x = blk(x, t_emb)
+        x = self.attn2(x)
+        x2_skip = x
+        x = self.downsample2(x)
+
+        for blk in self.down3:
+            x = blk(x, t_emb)
+        x = self.attn3(x)
+        x3_skip = x
+        x = self.downsample3(x)
+
+        for blk in self.down4:
+            x = blk(x, t_emb)
+
+        for blk in self.middle:
+            if isinstance(blk, AttentionBlock):
+                x = blk(x)
+            else:
+                x = blk(x, t_emb)
+
+        x = self.upsample3(x)
+        x = torch.cat([x, x3_skip], dim=1)
+        for blk in self.up3:
+            x = blk(x, t_emb)
+        x = self.up_attn3(x)
+
+        x = self.upsample2(x)
+        x = torch.cat([x, x2_skip], dim=1)
+        for blk in self.up2:
+            x = blk(x, t_emb)
+        x = self.up_attn2(x)
+
+        x = self.upsample1(x)
+        x = torch.cat([x, x1_skip], dim=1)
+        for blk in self.up1:
+            x = blk(x, t_emb)
+
+        x = self.output_conv(x)
+        x = x[:, :, ph_top:ph_top + H_orig, pw_left:pw_left + W_orig]
         return x
 
 
