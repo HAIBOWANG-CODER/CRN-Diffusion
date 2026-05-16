@@ -201,13 +201,25 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 | Exp-3（Base, v0=100, T=5） | 166.66043 | 12.19615 | 200 |
 | Exp-4（Full, v0=100, T=5） | 0.1038 | 0.00093576 | 200 |
 
-> 插入 wandb epoch loss 曲线截图：
-> ![Epoch Loss 对比](../generated/epoch_loss_comparison.png)
+Exp-1:
+> ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png)
+Exp-2:
+>![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png)
+Exp-3:
+>![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png)
+Exp-4:
+> ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png)
 
 #### Step Loss 曲线
 
-> 插入 wandb step loss 曲线截图：
-> ![Step Loss 对比](../generated/step_loss_comparison.png)
+Exp-1:
+> ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png)
+Exp-2:
+>![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png)
+Exp-3:
+>![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png)
+Exp-4:
+> ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png)
 
 **分析**：
 
@@ -295,8 +307,7 @@ $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\
 
 1. **反向采样近似**：Base 模型丢弃了 $x_t$ 的条件信息，Full 模型的后验修正基于高斯近似，均非精确 CRN 后验。
 2. **高斯近似误差**：$v_0=10$ 时高斯近似精度有限，$v_0=100$ 时更精确但 score 幅度增大带来训练挑战。
-3. **评估指标**：本报告主要依赖视觉质量和 loss 曲线，未计算 FID 分数（需要 1000 张生成图）。
-4. **数据集规模**：仅在 MNIST 上验证，复杂数据集（CIFAR 等）的表现未知。
+3. **数据集规模**：仅在 MNIST 上验证，复杂数据集（CIFAR 等）的表现未知。
 
 ### 7.5 后续方向
 
