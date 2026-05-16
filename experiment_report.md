@@ -259,7 +259,7 @@ Reverser Tajectory
 
 | Exp-1 |  Exp-2 | Exp-3 | Exp-4 |
 |---------|---------|----------|----------|
-| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/reverse_trajectory-v0-10.png) |  | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/reverse_trajectory.png) |
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/reverse_trajectory-v0-10.png) | 暂无 | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/reverse_trajectory.png) |
 
 
 ### 6.4 训练时间对比
