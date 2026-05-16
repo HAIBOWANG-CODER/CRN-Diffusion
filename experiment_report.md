@@ -160,6 +160,7 @@ $$x_{t-\Delta t} \;\sim\; \mathcal{N}(\tilde{\mu},\; \tilde{\sigma}^2)$$
 | Exp-3 | Base | 100 | 5.0 | 高 $v_0$，缩短扩散时间 |
 | Exp-4 | Full | 100 | 5.0 | Full 模型，与 Exp-3 对比 |
 | Exp-5 | Base | 100 | 1.0 | 与 Exp-3 对比 |
+| Exp-6 | Base | 100 | 100.0 | 与 Exp-5 对比 |
 
 ### 5.2 $v_0$ 的影响
 
@@ -202,16 +203,17 @@ $T$ 控制扩散程度，$e^{-T}$ 为信号保留比例：
 | Exp-3（Base, v0=100, T=5） | 166.66043 | 12.19615 | 200 |
 | Exp-4（Full, v0=100, T=5） | 0.1038 | 0.00093576 | 200 |
 | Exp-5（Base, v0=100, T=1） | 456.48764 | 52.5515 | 200 |
+| Exp-6（Base, v0=100, T=100） | 456.48764 | 52.5515 | 200 |
 
-| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
-|---------|---------|----------|----------|----------|
-| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-epoch-loss.png) |
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
+|---------|---------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-epoch-loss.png) |
 
 #### Step Loss 曲线
 
-| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
-|---------|---------|----------|----------|----------|
-| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-step-loss.png) |
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
+|---------|---------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-step-loss.png) |
 
 
 ### 6.2 学习率曲线
@@ -262,12 +264,18 @@ $$
 |---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
 | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/epoch0200.png) |
 
+#### Exp-6（Base, v0=100, T=100）
+
+| Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
+|---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0005.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0025.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0045.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0065.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0085.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0105.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0125.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0145.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0165.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0185.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/epoch0200.png) |
+
 
 Reverser Tajectory
 
-| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
-|---------|---------|----------|----------|----------|
-| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/reverse_trajectory-v0-10.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/reverse_trajectory-v0-100-T-8.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/reverse_trajectory-v0-100-T-1.png) |
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
+|---------|---------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/reverse_trajectory-v0-10.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-8/reverse_trajectory-v0-100-T-8.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-full/v0-100-T-5/reverse_trajectory.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-1/reverse_trajectory-v0-100-T-1.png) | ![](CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-100-T-100/reverse_trajectory-v0-100-T-100.png) |
 
 
 ### 6.4 训练时间对比
@@ -279,11 +287,12 @@ Reverser Tajectory
 | Exp-3（Base, v0=100, T=5） | vGPU-48GB(48GB)  | 17.9 s | 60.3 min |
 | Exp-4（Full, v0=100, T=5） | vGPU-48GB(48GB)  | 28.1 s | 94.3 min |
 | Exp-5（Base, v0=100, T=1） | vGPU-48GB(48GB)  | 19.5 s | 65.5 min |
+| Exp-6（Base, v0=100, T=100） | vGPU-48GB(48GB)  | 19.5 s | 65.5 min |
 
 
-| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
-|---------|---------|----------|----------|----------|
-| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-epoch-time.png) |
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 | Exp-6 |
+|---------|---------|----------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-100/exp6-epoch-time.png) |
 
 
 ---
