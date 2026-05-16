@@ -198,7 +198,7 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 |--------|----------|----------|-----------|
 | Exp-1（Base, v0=10, T=8） | 16.14546 | 0.31927 | 200 |
 | Exp-2（Base, v0=100, T=8） | 138.12271 | 7.63349 | 200 |
-| Exp-3（Base, v0=100, T=5） | [166.66043] | 12.19615 | 200 |
+| Exp-3（Base, v0=100, T=5） | 166.66043 | 12.19615 | 200 |
 | Exp-4（Full, v0=100, T=5） | 0.1038 | 0.00093576 | 200 |
 
 > 插入 wandb epoch loss 曲线截图：
@@ -228,21 +228,21 @@ $$\eta(e) = \begin{cases} \eta_{max} \cdot e / e_{warmup} & e \leq e_{warmup} \\
 
 #### Exp-1（Base, v0=10, T=8）
 
-| Epoch 5 | Epoch 50 | Epoch 100 | Epoch 200 |
-|---------|---------|----------|----------|
-| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
+| Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
+|---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+| CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0005.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0025.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0045.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0065.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0085.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0105.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0125.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0145.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0165.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0185.png | CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base/v0-10-T-8/epoch0200.png |
 
 #### Exp-2（Base, v0=100, T=8）
 
-| Epoch 5 | Epoch 50 | Epoch 100 | Epoch 200 |
-|---------|---------|----------|----------|
-| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
+| Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
+|---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
 
 #### Exp-3（Base, v0=100, T=5）
 
-| Epoch 5 | Epoch 50 | Epoch 100 | Epoch 200 |
-|---------|---------|----------|----------|
-| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
+| Epoch 5 | Epoch 25 | Epoch 45 | Epoch 65 | Epoch 85 | Epoch 105 | Epoch 125 | Epoch 145 | Epoch 165 | Epoch 185 | Epoch 200 |
+|---------|---------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+| [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] | [TODO 插图] |
 
 #### Exp-4（Full, v0=100, T=5）
 
