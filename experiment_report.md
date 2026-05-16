@@ -205,13 +205,13 @@ $T$ 控制扩散程度，$e^{-T}$ 为信号保留比例：
 
 | Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
 |---------|---------|----------|----------|----------|
-| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-epoch-loss-full.png) |
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-epoch-loss.png) |
 
 #### Step Loss 曲线
 
 | Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
 |---------|---------|----------|----------|----------|
-| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp5-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp5-step-loss-full.png) |
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-step-loss.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp5-step-loss-full.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-step-loss.png) |
 
 
 ### 6.2 学习率曲线
@@ -281,9 +281,9 @@ Reverser Tajectory
 | Exp-5（Base, v0=100, T=1） | vGPU-48GB(48GB)  | 19.5 s | 65.5 min |
 
 
-| Exp-1 |  Exp-2 | Exp-3 | Exp-4 |
-|---------|---------|----------|----------|
-| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) |
+| Exp-1 |  Exp-2 | Exp-3 | Exp-4 | Exp-5 |
+|---------|---------|----------|----------|----------|
+| ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-10-T-8/exp1-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-8/exp2-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-5/exp3-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-full/exp4-epoch-time.png) | ![](CRN-based-Diffusion-Models/train-data/crn-diffusion-base/v0-100-T-1/exp1-epoch-time.png) |
 
 
 ---
