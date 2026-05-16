@@ -188,7 +188,7 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 
 ## 6. 实验结果
 
-> 说明：以下数据来自 wandb 记录和训练日志，图片来自 `samples/` 和 `generated/` 目录。
+> 说明：以下数据来自 wandb 记录和训练日志，图片来自 `CRN-based-Diffusion-Models/CRN-data/crn-diffusion-base` 和 `CRN-based-Diffusion-Models/CRN-data/crn-full` 目录。
 
 ### 6.1 训练损失对比
 
@@ -196,10 +196,10 @@ $T$ 控制扩散程度，$$e^{-T}$$ 为信号保留比例：
 
 | 实验组 | 初始 Loss | 收敛 Loss | 收敛 Epoch |
 |--------|----------|----------|-----------|
-| Exp-1（Base, v0=10, T=8） | [TODO] | [TODO] | [TODO] |
-| Exp-2（Base, v0=100, T=8） | [TODO] | [TODO] | [TODO] |
-| Exp-3（Base, v0=100, T=5） | [TODO] | [TODO] | [TODO] |
-| Exp-4（Full, v0=100, T=5） | [TODO] | [TODO] | [TODO] |
+| Exp-1（Base, v0=10, T=8） | 16.14546 | 0.31927 | 200 |
+| Exp-2（Base, v0=100, T=8） | 138.12271 | 7.63349 | 200 |
+| Exp-3（Base, v0=100, T=5） | [166.66043] | 12.19615 | 200 |
+| Exp-4（Full, v0=100, T=5） | 0.1038 | 0.00093576 | 200 |
 
 > 插入 wandb epoch loss 曲线截图：
 > ![Epoch Loss 对比](../generated/epoch_loss_comparison.png)
